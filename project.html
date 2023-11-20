@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>project</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="normalize.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li>
+                <a href="index.html"><i class="fas fa-home"></i> </a>
+            </li>
+        </ul>
+    </nav>
+<main>
+    <h3>Projet 01</h3>
+    <p> 
+        Dans ce projet, j'ai effectué les étapes suivantes :</p>
+        <p>1-Le remplissage du tableau.</p>
+        <p>2-La fonction somme pour calculer la somme des éléments du tableau.</p>
+        <p>3-La fonction recherche pour trouver une valeur spécifique à l'aide d'un pointeur.</p>
+         <p>   Remarque: les pointeurs dans la fonction recherche permettent de renvoyer les indices de ligne et de colonne où la valeur spécifique a été trouvée, en modifiant directement les valeurs de ces indices à l'extérieur de la fonction.</p>
+        <p>4-L'affichage.</p>
+
+<pre>
+    #include <stdio.h>
+
+        int remplissage(int tab[50][50], int n, int m, int i, int j) {
+            if (i < n) {
+                if (j < m) {
+                    printf("Entrez: [%d][%d] : ", i, j);
+                    scanf("%d", &tab[i][j]);
+                    remplissage(tab, n, m, i, j + 1);
+                } else {
+                    remplissage(tab, n, m, i + 1, 0);
+                }
+            }
+        }
+        
+        //J'AI UTILISER LE "n" et le "m" pour definir l'odre du tableau et indices i et j pour chaque valeur :
+        int somme(int tab[50][50], int n, int m, int i, int j) {
+            if (i == n) {
+                return 0;
+            } else if (j == m) {
+                return somme(tab, n, m, i + 1, 0);
+            } else {
+                return tab[i][j] + somme(tab, n, m, i, j + 1);
+            }
+        }
+        //LA J'AI AJOUTER "ligne et colonnes "  qui pointe sur les adresse des indice comme jai mentionner dans laffichage de chaque indice pour preciser la location de la valeur specifique 
+        int recherche(int tab[50][50], int b, int n, int m, int i, int j, int* ligne, int* colonne) {
+            if (i == n) {
+                return 0;
+            } else if (j == m) {
+                return recherche(tab, b, n, m, i + 1, 0, ligne, colonne);
+            } else if (tab[i][j] == b) {
+                *ligne = i;
+                *colonne = j;
+                return 1;
+            } else {
+                return recherche(tab, b, n, m, i, j + 1, ligne, colonne);
+            }
+        }
+        
+        int main() {
+            int n, m;
+            
+            printf("Entrez le nombre de lignes du tableau : ");
+            scanf("%d", &n);
+            printf("Entrez le nombre de colonnes du tableau : ");
+            scanf("%d", &m);
+        
+            int tab[n][m];
+        
+            printf("veuillez remplire le tableau :\n");
+            remplissage(tab, n, m, 0, 0);
+        
+            int somme_resultat;
+            somme_resultat= somme(tab, n, m, 0, 0);
+            printf("La somme des elements du tableau est : %d\n", somme_resultat);
+        
+            int recherche_valeur;
+            printf("Entrez la valeur a rechercher dans le tableau : ");
+            scanf("%d", &recherche_valeur);
+            
+            int ligne, colonne,resultat_Recherche;
+             resultat_Recherche = recherche(tab, recherche_valeur, n, m, 0, 0, &ligne, &colonne);
+        
+            if (resultat_Recherche) {
+                printf("La valeur %d a ete trouvee dans le tableau et plus precisment elle  se trouve a la ligne %d, colonne %d.\n", recherche_valeur, ligne, colonne);
+            } else {
+                printf("La valeur %d n'a pas ete trouvee dans le tableau.\n", recherche_valeur);
+            }
+        
+            return 0;
+        }
+   
+   
+   </pre>
+</main>
+</body>
+</html>
