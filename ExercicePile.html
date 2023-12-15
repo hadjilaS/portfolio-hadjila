@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExercicePile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="normalize.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li>
+                <a href="index.html"><i class="fas fa-home"></i> </a>
+            </li>
+        </ul>
+    </nav>
+<main>
+    <h3>ExercicePile</h3>
+<pre>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct stack {
+  char c;
+  struct stack *link;
+} stack;
+
+stack *top = NULL;
+
+stack *push(char c) {
+  stack *new = malloc(sizeof(stack));
+  if (new == NULL) {
+    exit(1);
+  }
+  new->c = c;
+  new->link = top;
+  top = new;
+  return new;
+}
+
+int isEmpty() {
+  if (top == NULL) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+char topStack() {
+  if (isEmpty()) {
+    return '\0';
+  } else {
+    return top->c;
+  }
+}
+
+char pop() {
+  char poped_c='\0';
+  if (isEmpty()) {
+    printf("Stack is empty\n");
+  } else {
+    poped_c = top->c;
+    stack *tmp = top;
+    top = top->link;
+    free(tmp);
+  }
+  return poped_c;
+}
+
+void infixToPostfix(char exp[], char result[]) {
+
+  int length = strlen(exp);
+  for (int i = length; i >= 0; i--) {
+    exp[i + 1] = exp[i];
+  }
+  exp[0] = '(';
+  exp[length] = ')';
+  exp[length + 1] = '\0';
+  printf("Modified expression: %s\n", exp);
+
+  length = strlen(exp);
+  int j = -1;
+  for (int i = 0; i <= length; i++) {
+    if (exp[i] == '(') {
+      push(exp[i]);
+    } else if ((exp[i] == '+' || exp[i] == '-' || exp[i] == '*' || exp[i] == '/') && topStack() == '(') {
+      push(exp[i]);
+    } else if ((exp[i] == '+' || exp[i] == '-') && topStack() != '(') {
+      while (topStack() != '(') {
+        j++;
+        result[j] = pop();
+      }
+      push(exp[i]);
+    } else if ((exp[i] == '*' || exp[i] == '/') && (topStack() == '+' || topStack() == '-')) {
+      push(exp[i]);
+    } else if ((exp[i] == '*' || exp[i] == '/') && (topStack() == '*' || topStack() == '/')) {
+      while (topStack() != '(' && topStack() != '-' && topStack() != '+') {
+        j++;
+        result[j] = pop();
+      }
+    } else if (exp[i] == ')') {
+      while (topStack() != '(') {
+        j++;
+        result[j] = pop();
+      }
+      pop();
+    } else {
+      j++;
+      result[j] = exp[i];
+    }
+  }
+}
+int main() {
+  char result[255], exp[255];
+  printf("Enter your expression: ");
+  fgets(exp, 255, stdin);
+  printf("Expression: %s\n", exp);
+  infixToPostfix(exp, result);
+  printf("\nResult: %s\n", result);
+  return 0;
+}
+   
+   
+   </pre>
+</main>
+</body>
+</html>
